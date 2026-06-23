@@ -1,0 +1,36 @@
+@startuml
+
+actor Usuario
+
+participant Main
+participant Contexto
+participant Calculador
+participant EstrategiaPonderacion
+participant Reporte
+
+Usuario -> Main : Ejecutar evaluación
+
+Main -> Contexto : Crear contexto\n(docente, competencia,\nevaluacion, antiguedad)
+
+Main -> Calculador : CalcularPuntajeConReglas(ctx)
+
+loop Por cada estrategia
+    Calculador -> EstrategiaPonderacion : Aplica(ctx)
+    alt Regla aplica
+        EstrategiaPonderacion --> Calculador : true
+        Calculador -> EstrategiaPonderacion : Calcular(ctx)
+        EstrategiaPonderacion --> Calculador : nuevo puntaje
+    else No aplica
+        EstrategiaPonderacion --> Calculador : false
+    end
+end
+
+Calculador --> Main : puntaje final + reglas
+
+Main -> Reporte : GenerarReporteJustificado()
+
+Reporte --> Main : reporte generado
+
+Main --> Usuario : Mostrar resultado
+
+@enduml
