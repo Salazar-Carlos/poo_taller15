@@ -1,5 +1,4 @@
 @startuml
-package "model" {
 
 class Docente {
     ID string
@@ -22,14 +21,11 @@ class Evaluacion {
     PuntajeFinal float64
 }
 
-}
-
-package "strategy" {
-
 class Contexto {
-    Docente Docente
-    Competencia Competencia
-    Evaluacion Evaluacion
+    docente Docente
+    competencia Competencia
+    evaluacion Evaluacion
+    Antiguedad int
     ReglasAplicadas []string
 }
 
@@ -40,41 +36,33 @@ interface EstrategiaPonderacion {
     Prioridad() int
 }
 
-class ReglaCienciasInvestigacion
-class ReglaDirectorGestion
-class ReglaAntiguedad
-class ReglaCoordinadorAcademica
-class ReglaAdministracionGestion
+class ReglaR1
+class ReglaR2
+class ReglaR3
+class ReglaR4
+class ReglaR5
 
-EstrategiaPonderacion <|.. ReglaCienciasInvestigacion
-EstrategiaPonderacion <|.. ReglaDirectorGestion
-EstrategiaPonderacion <|.. ReglaAntiguedad
-EstrategiaPonderacion <|.. ReglaCoordinadorAcademica
-EstrategiaPonderacion <|.. ReglaAdministracionGestion
-
-}
-
-package "engine" {
-
-class CalculadorReglas {
+class Calculador {
     estrategias []EstrategiaPonderacion
     CalcularPuntajeConReglas()
 }
 
-class ReporteGenerator {
+class Reporte {
     GenerarReporteJustificado()
 }
 
-}
+EstrategiaPonderacion <|.. ReglaR1
+EstrategiaPonderacion <|.. ReglaR2
+EstrategiaPonderacion <|.. ReglaR3
+EstrategiaPonderacion <|.. ReglaR4
+EstrategiaPonderacion <|.. ReglaR5
 
-CalculadorReglas *-- EstrategiaPonderacion
-CalculadorReglas *-- Contexto
+Calculador *-- EstrategiaPonderacion
+Calculador --> Contexto
+Reporte --> Contexto
 
 Contexto *-- Docente
 Contexto *-- Competencia
 Contexto *-- Evaluacion
-
-ReporteGenerator ..> CalculadorReglas
-ReporteGenerator ..> Contexto
 
 @enduml
